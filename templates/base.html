@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/cheatsheet.rtl.css' %}">
+
+</head>
+<body class="bg-light">
+    <header class="bd-header bg-secondary py-3 d-flex align-items-stretch border-bottom border-dark">
+      <div class="container-fluid d-flex align-items-center">
+        <a href="{% url 'home' %}"><img src="{% static 'img/favicon.png' %}" style="height: 30px"></a>
+      </div>
+      <a class="ms-auto link-light mt-1" href="{% url 'get_contract_nft' %}" style="width: 100px;">NFT Display</a>
+      <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Collects
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="{% url 'collections' 'nft' %}">NFT</a></li>
+            <li><a class="dropdown-item" href="{% url 'collections' 'avatars' %}">Avatars</a></li>
+          </ul>
+      </div>
+    </header>
+    {% block content %}
+    {% endblock content %}
+    <script src="{% static 'bootstrap5/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstrap5/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

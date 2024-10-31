@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock title %}
+{% block content %}
+<main role="main" style="padding-top: 40%; width: 610%">
+    <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">NFT Collections</h1>
+          <p class="lead text-muted">Create NFT of Avatar Collection</p>
+          <p>
+            <a href="{% url 'avatars_generate' %}" class="btn btn-primary my-2">Avatars Create Collections</a>
+            <a href="{% url 'nft_generate' %}" class="btn btn-secondary my-2">NFT Create Collections</a>
+          </p>
+        </div>
+    </section>
+</main>
+{% endblock content %}

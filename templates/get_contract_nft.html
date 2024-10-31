@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My NFT Display Website{% endblock title %}
+{% block content %}
+<style>
+    .main {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 40%;
+        width: 610%;
+    }
+
+    #image-container {
+        margin-top: 20px;
+    }
+
+    #additional-info {
+        margin-top: 20px;
+        text-align: left;
+        /* Align text to the left */
+    }
+
+    #additional-info p,
+    #additional-info ul {
+        max-width: 400px;
+        /* Adjust this value to control the text width */
+        margin: 0 auto;
+        /* Center the text within the specified width */
+    }
+
+    #additional-info ul {
+        list-style: none;
+        /* Remove bullet points from the unordered list */
+        padding: 0;
+    }
+
+    #additional-info span {
+        display: inline-block;
+        /* Display traits as inline elements */
+        margin-right: 0;
+        /* No spacing between traits */
+    }
+</style>
+<div class="main">
+    <h1>My NFT Display Website</h1>
+    <input type="text" id="api_key" value="{{ api_key }}" hidden>
+
+    <!-- Input fields for contract address and token ID -->
+    <div>
+        <label for="contractAddress">Contract Address:</label>
+        <input type="text" id="contractAddress" placeholder="Enter contract address" value="{{ contract_address }}">
+    </div><br>
+    <div>
+        <label for="tokenId">Token ID:</label>
+        <input type="text" id="tokenId" placeholder="Enter token ID" value="{{ token_id }}">
+    </div>
+    <br>
+    <button onclick="fetchImage()">Load Image</button>
+
+    <div id="image-container"></div>
+    <div id="additional-info"></div>
+
+    <script>
+        function fetchImage() {
+            // Replace 'YOUR_API_KEY' with your actual OpenSea API key
+            const apiKey = document.getElementById('api_key').value;
+
+            // Get contract address and token ID from input fields
+            const contractAddress = document.getElementById('contractAddress').value;
+            const tokenId = document.getElementById('tokenId').value;
+
+            // OpenSea API Endpoint for fetching NFT metadata for a single NFT: https://docs.opensea.io/reference/get_nft
+            const apiUrl = 'https://api.opensea.io/api/v2/chain/ethereum/contract/' + contractAddress + '/nfts/' + tokenId;
+            console.log(apiUrl);
+
+            // Make a fetch request to the API with headers
+            fetch(apiUrl, {
+                headers: {
+                    'X-API-KEY': `${apiKey}`,
+                    'Content-Type': 'application/json',
+                    // Add any other headers required by your API
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.nft && data.nft.image_url) {
+                        const imageUrl = data.nft.image_url;
+
+                        // Display the resized image in the #image-container div
+                        const imageElement = new Image();
+                        imageElement.src = imageUrl;
+                        imageElement.alt = 'API Image';
+
+                        // Set the maximum width and height for the image
+                        const maxWidth = 400; // Adjust this value as needed
+                        const maxHeight = 400; // Adjust this value as needed
+
+                        // Ensure the image is loaded before calculating dimensions
+                        imageElement.onload = function () {
+                            const aspectRatio = imageElement.width / imageElement.height;
+
+                            // Resize the image while maintaining aspect ratio
+                            if (imageElement.width > maxWidth) {
+                                imageElement.width = maxWidth;
+                                imageElement.height = maxWidth / aspectRatio;
+                            }
+
+                            if (imageElement.height > maxHeight) {
+                                imageElement.height = maxHeight;
+                                imageElement.width = maxHeight * aspectRatio;
+                            }
+
+                            // Clear previous content and append the resized image
+                            document.getElementById('image-container').innerHTML = '';
+                            document.getElementById('image-container').appendChild(imageElement);
+
+                            // Display additional text fields below the image
+                            const additionalInfoElement = document.getElementById('additional-info');
+                            additionalInfoElement.innerHTML = `
+                                <p><strong>Name:</strong> ${data.nft.name}</p>
+                                <p><strong>Description:</strong> ${data.nft.description}</p>
+                                <p><strong>Collection:</strong> ${data.nft.collection}</p>
+                                <p><strong>Traits:</strong> ${data.nft.traits.map(trait => `<span><strong>${trait.trait_type}:</strong> ${trait.value}</span>`).join(',')}</p>
+                            `;
+                        };
+                    } else {
+                        console.error('Invalid API response format.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+        }
+    </script>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+# Virtual environment
+*venv*/
+
+# Migrations
+*/migrations/*
+!*/migrations/__init__.py
+
+# Python cache
+*/__pycache__/*
+*.pyc
+
+# Media (files, documents)
+/media/*
+
+# Database files
+*.sql*
+
+# IDE
+.idea
+
+# Django environment | .env
+.env
+
+# Collect static
+static/nft_options/original.png
+static/nft_options/items/hats/*
+static/nft_options/items/mustache/*
+static/nft_options/items/subjects/*
+
+# Inner
+contract
+nft/tests.py
